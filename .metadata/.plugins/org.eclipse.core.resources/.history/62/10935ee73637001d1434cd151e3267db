@@ -1,0 +1,6 @@
+package com.myproject.entity;
+
+@Entity
+public class User {
+
+}

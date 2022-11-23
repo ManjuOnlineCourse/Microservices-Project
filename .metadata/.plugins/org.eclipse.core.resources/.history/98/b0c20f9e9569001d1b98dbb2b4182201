@@ -1,0 +1,60 @@
+eureka:
+  client:
+    service-url:
+      defaultzone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    hostname: localhost
+spring:
+  mail:
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+          auth: true
+    host: smtp.gmail.com
+    username: manjunandi2016@gmail.com
+    password: axxeicfhdcyutjrm
+    port: 587
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+        format_sql: true
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  application:
+    name: USER_MICROSERVICE
+  datasource:
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    url: jdbc:mysql://localhost:3306/microservice_project
+    
+server:
+  port: 9002
+
+management:
+  endpoint:
+    health:
+      enabled: true
+      show-details: always
+    circuitbreakers:
+      enabled: true
+        
+resilience4j.circuitbreaker:
+    instances:
+        backendB:
+            registerHealthIndicator: true
+            slidingWindowSize: 10
+            permittedNumberOfCallsInHalfOpenState: 3
+            slidingWindowType: COUNT_BASED
+            minimumNumberOfCalls: 20
+            waitDurationInOpenState: 50s
+            failureRateThreshold: 50
+            eventConsumerBufferSize: 10
+            recordFailurePredicate: io.github.robwin.exception.RecordFailurePredicate
+            automatic-transition-from-open-to-half-open-enabled: true

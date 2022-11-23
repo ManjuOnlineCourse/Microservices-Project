@@ -1,0 +1,5 @@
+package com.myproject.microservice.ServiceImpl;
+
+public class EmailServiceImpl {
+
+}

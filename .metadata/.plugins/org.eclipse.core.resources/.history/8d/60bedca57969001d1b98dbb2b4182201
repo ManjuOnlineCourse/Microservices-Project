@@ -1,0 +1,61 @@
+package com.myproject.microservice.ServiceImpl;
+
+
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import com.myproject.microservice.Entity.User;
+import com.myproject.microservice.Exception.ResourceNotFoundException;
+import com.myproject.microservice.Repository.UserRepo;
+import com.myproject.microservice.Service.UserService;
+import com.myproject.microservice.VO.Department;
+import com.myproject.microservice.VO.ResponseTemplateVO;
+
+@Service
+public class UserServiceImpl implements UserService{
+
+	public static final Pattern VALID_EMAIL_ADDRESS_REGEX = 
+			Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+	
+	@Autowired
+	private UserRepo userRepo;
+	
+	@Autowired
+	RestTemplate restTemplate;
+
+	@Override
+	public User saveUser(User user) throws Exception{
+		if(validate(user.getEmail()))
+			return userRepo.save(user);
+		return new ResourceNotFoundException("Email", "email", user.getEmail());
+	}
+
+	@Override
+	public ResponseTemplateVO getUserWithDepartment(Long userId) {
+		ResponseTemplateVO responseTemplateVO=new ResponseTemplateVO();
+		
+		User user=userRepo.findById(userId).orElseThrow(()->new ResourceNotFoundException("User","ID",userId));
+		
+		Department department = restTemplate.getForObject("http://localhost:9001/api/department/"+user.getDepartmentId(), Department.class);
+		//Department department = restTemplate.getForObject("http://DEPARTMENT_MICROSERVICE/api/department/"+user.getDepartmentId(), Department.class);
+		
+		//System.out.println(department.getDname()+" : "+department.getDepartId());
+		
+		responseTemplateVO.setUser(user);
+		responseTemplateVO.setDepartment(department);
+		
+		//System.out.println(responseTemplateVO.getDepartment());
+		return responseTemplateVO;
+	}
+	
+	public static boolean validate(String emailStr) {
+		Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(emailStr);
+		return matcher.find();
+	}
+	
+}

@@ -1,0 +1,31 @@
+package com.myproject.microservice.ServiceImpl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.myproject.microservice.Entity.User;
+import com.myproject.microservice.Repository.UserRepo;
+import com.myproject.microservice.Service.UserService;
+import com.myproject.microservice.VO.ResponseTemplateVO;
+
+@Service
+public class UserServiceImpl implements UserService{
+
+	@Autowired
+	private UserRepo userRepo;
+
+	@Override
+	public User saveUser(User user) {
+		return userRepo.save(user);
+	}
+
+	@Override
+	public ResponseTemplateVO getUserWithDepartment(Long userId) {
+		ResponseTemplateVO responseTemplateVO=new ResponseTemplateVO();
+		
+		User user=userRepo.findById(userId).orElseThrow(()->new ResourceNotFoundException("User","Is",userId));
+		
+		return ;
+	}
+	
+}

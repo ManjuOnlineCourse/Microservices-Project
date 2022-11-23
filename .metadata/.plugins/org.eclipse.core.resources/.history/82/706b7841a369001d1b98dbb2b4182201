@@ -1,0 +1,27 @@
+package controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+
+import com.myproject.microservice.VO.Department;
+
+@RestController
+public class TestController {
+
+	
+	@Autowired
+	RestTemplate restTemplate;
+	
+	@GetMapping("/test")
+	public ResponseEntity<Department> getDepartment(@PathVariable Long id){
+		
+		return new ResponseEntity<Department>(restTemplate.getForObject("http://localhost:9001/api/department/"+id, Department.class),HttpStatus.OK);
+		
+	}
+	
+}

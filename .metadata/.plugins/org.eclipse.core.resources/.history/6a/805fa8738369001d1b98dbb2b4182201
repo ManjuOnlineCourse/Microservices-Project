@@ -1,0 +1,5 @@
+package com.myproject.microservice.Service;
+
+public interface EmailService {
+
+}

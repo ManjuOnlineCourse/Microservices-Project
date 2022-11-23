@@ -1,0 +1,21 @@
+package com.myproject.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+
+import com.myproject.entity.User;
+import com.myproject.repository.UserRepo;
+
+@Service
+public class UserService {
+
+	@Autowired
+	private UserRepo userRepo;
+
+	public User saveUser(User user) {
+		return userRepo.save(user);
+	}
+	
+}
